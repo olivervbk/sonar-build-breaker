@@ -173,6 +173,8 @@ public class QualityGateBreaker extends BuildBreaker {
     		
       if (!settings.getBoolean(BuildBreakerPlugin.DRY_RUN_KEY)) {
         fail("Project does not pass the quality gate.");
+      }else{
+        LOGGER.warn("Build Breaker is in dry run mode. Will not fail build.");
       }
     }
   }
