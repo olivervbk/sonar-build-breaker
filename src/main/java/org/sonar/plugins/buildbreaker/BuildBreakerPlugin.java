@@ -55,7 +55,14 @@ import java.util.List;
     name = "Forbidden configuration parameters",
     description = "Comma-separated list of <code>key=value</code> pairs that should break the build.",
     global = true,
-    project = false)
+    project = false),
+  @Property(key = BuildBreakerPlugin.DRY_RUN_KEY,
+	defaultValue = "false",
+    name = "Execute but do not fail build",
+    description = "If set to true, the quality gate will be checked for alert or error but the build will not be broken."
+    	+ " Useful for checking in the log if the build has reached a threshold.",
+    global = true,
+    project = true)
 })
 public class BuildBreakerPlugin extends SonarPlugin {
 
@@ -71,6 +78,8 @@ public class BuildBreakerPlugin extends SonarPlugin {
   public static final String BUILD_BREAKER_LOG_STAMP = "[BUILD BREAKER] ";
 
   public static final String FORBIDDEN_CONF_KEY = "sonar.buildbreaker.forbiddenConf";
+  
+  public static final String DRY_RUN_KEY = "sonar.buildbreaker.dryRun";
 
   @Override
   public List getExtensions() {

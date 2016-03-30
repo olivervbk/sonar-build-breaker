@@ -162,35 +162,45 @@ public class QualityGateBreaker extends BuildBreaker {
     Status status = projectStatus.getStatus();
     LOGGER.info("Quality gate status: {}", status);
 
-    int errors = 0;
-    if (Status.ERROR.equals(status) || Status.WARN.equals(status)) {
-      errors = logConditions(projectStatus.getConditionsList());
-    }
-
-    if (Status.ERROR.equals(status)) {
+    int warnings = logConditions(Status.WARN, projectStatus.getConditionsList()); 
+    int errors = logConditions(Status.ERROR, projectStatus.getConditionsList());
+    
+    if(Status.WARN.equals(status)){
+      LOGGER.warn("{}Project reached {} warn thresholds", BuildBreakerPlugin.BUILD_BREAKER_LOG_STAMP, warnings);
+      
+    }else if(Status.ERROR.equals(status)){
       LOGGER.error("{}Project did not meet {} conditions", BuildBreakerPlugin.BUILD_BREAKER_LOG_STAMP, errors);
-      fail("Project does not pass the quality gate.");
+    		
+      if (!settings.getBoolean(BuildBreakerPlugin.DRY_RUN_KEY)) {
+        fail("Project does not pass the quality gate.");
+      }
     }
   }
 
   @VisibleForTesting
-  static int logConditions(List<Condition> conditionsList) {
+  static int logConditions(Status statusToLog, List<Condition> conditionsList) {
     int errors = 0;
 
     for (Condition condition : conditionsList) {
-      if (Status.WARN.equals(condition.getStatus())) {
-        LOGGER.warn("{}: {} {} {}",
-            getMetricName(condition.getMetricKey()),
-            condition.getActualValue(),
-            getComparatorSymbol(condition.getComparator()),
-            condition.getWarningThreshold());
-      } else if (Status.ERROR.equals(condition.getStatus())) {
+    	
+      Status conditionStatus = condition.getStatus();
+      if(statusToLog.equals(conditionStatus )){
         errors++;
-        LOGGER.error("{}: {} {} {}",
-            getMetricName(condition.getMetricKey()),
-            condition.getActualValue(),
-            getComparatorSymbol(condition.getComparator()),
-            condition.getErrorThreshold());
+        
+        if (Status.WARN.equals(conditionStatus)) {
+          LOGGER.warn("{}: {} {} {}",
+              getMetricName(condition.getMetricKey()),
+              condition.getActualValue(),
+              getComparatorSymbol(condition.getComparator()),
+              condition.getWarningThreshold());
+          
+        } else if (Status.ERROR.equals(conditionStatus)) {
+          LOGGER.error("{}: {} {} {}",
+              getMetricName(condition.getMetricKey()),
+              condition.getActualValue(),
+              getComparatorSymbol(condition.getComparator()),
+              condition.getErrorThreshold());
+        }
       }
     }
 

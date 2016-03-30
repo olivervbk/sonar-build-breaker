@@ -364,11 +364,15 @@ public class QualityGateBreakerTest {
     List<Condition> conditions = Lists.newArrayList();
     conditions.add(Condition.newBuilder().setStatus(Status.WARN).setMetricKey("violations").setActualValue("20").setComparator(Comparator.GT).setWarningThreshold("10").build());
     conditions.add(Condition.newBuilder().setStatus(Status.WARN).setMetricKey("uncovered_lines").setActualValue("20").setComparator(Comparator.NE).setWarningThreshold("0").build());
+    conditions.add(Condition.newBuilder().setStatus(Status.WARN).setMetricKey("dummy_metric").setActualValue("20").setComparator(Comparator.NE).setWarningThreshold("0").build());
     conditions.add(Condition.newBuilder().setStatus(Status.ERROR).setMetricKey("comment_lines").setActualValue("0").setComparator(Comparator.EQ).setErrorThreshold("0").build());
     conditions.add(Condition.newBuilder().setStatus(Status.ERROR).setMetricKey("custom_metric").setActualValue("0").setComparator(Comparator.LT).setErrorThreshold("10").build());
     conditions.add(Condition.newBuilder().setStatus(Status.OK).setMetricKey("blocker_violations").setActualValue("0").setComparator(Comparator.LT).setErrorThreshold("1").build());
 
-    int errors = QualityGateBreaker.logConditions(conditions);
+    int warnings = QualityGateBreaker.logConditions(Status.WARN, conditions);
+    assertEquals(3, warnings);
+
+    int errors = QualityGateBreaker.logConditions(Status.ERROR, conditions);
     assertEquals(2, errors);
   }
 }
