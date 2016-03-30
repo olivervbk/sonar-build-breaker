@@ -62,7 +62,8 @@ import java.util.List;
     description = "If set to true, the quality gate will be checked for alert or error but the build will not be broken."
     	+ " Useful for checking in the log if the build has reached a threshold.",
     global = true,
-    project = true)
+    project = true,
+    type = PropertyType.BOOLEAN)
 })
 public class BuildBreakerPlugin extends SonarPlugin {
 
