@@ -88,7 +88,7 @@ public class BuildBreakerPlugin extends SonarPlugin {
       .defaultValue("false")
       .name("Execute but do not fail build")
       .description(
-        "If set to true, the quality gate will be checked for alert or error but the build will not be broken.Useful for checking in the log if the build has reached a threshold.")
+        "If set to true, the quality gate will be checked for alert or error but the build will not be broken. Useful for checking in the log if the build has reached a threshold.")
       .type(PropertyType.BOOLEAN)
       .onQualifiers(Qualifiers.PROJECT)
       .build();
@@ -96,7 +96,7 @@ public class BuildBreakerPlugin extends SonarPlugin {
     PropertyDefinition errorLogStampProp = PropertyDefinition.builder(ERROR_THRESHOLD_LOG_STAMP_KEY)
       .defaultValue("BUILD_BREAKER_ERROR_THRESHOLD")
       .name("Error Threshold Log Stamp")
-      .description("String to be logged when ERROR threshold is reached.")
+      .description("String to be logged when an ERROR threshold is reached.")
       .onQualifiers(Qualifiers.PROJECT)
       .subCategory(LOGGING_SUB_CATEGORY)
       .build();
@@ -104,7 +104,7 @@ public class BuildBreakerPlugin extends SonarPlugin {
     PropertyDefinition warnLogStampProp = PropertyDefinition.builder(WARN_THRESHOLD_LOG_STAMP_KEY)
       .defaultValue("BUILD_BREAKER_WARN_THRESHOLD")
       .name("Warn Threshold Log Stamp")
-      .description("String to be logged when WARN threshold is reached.")
+      .description("String to be logged when a WARN threshold is reached.")
       .onQualifiers(Qualifiers.PROJECT)
       .subCategory(LOGGING_SUB_CATEGORY)
       .build();
