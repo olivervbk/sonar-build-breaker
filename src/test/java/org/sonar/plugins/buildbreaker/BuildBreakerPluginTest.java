@@ -21,13 +21,18 @@ package org.sonar.plugins.buildbreaker;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.util.List;
+
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matcher;
+import org.hamcrest.MatcherAssert;
 
 public class BuildBreakerPluginTest {
 
   @Test
   public void testDeclaredExtensions() {
-    assertEquals(2, new BuildBreakerPlugin().getExtensions().size());
+	  final List extensions = new BuildBreakerPlugin().getExtensions();
+	MatcherAssert.assertThat( extensions, (Matcher) CoreMatchers.hasItems(ForbiddenConfigurationBreaker.class, QualityGateBreaker.class));
   }
 
 }

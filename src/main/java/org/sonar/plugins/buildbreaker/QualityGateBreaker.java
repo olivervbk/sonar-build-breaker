@@ -166,10 +166,12 @@ public class QualityGateBreaker extends BuildBreaker {
     int errors = logConditions(Status.ERROR, projectStatus.getConditionsList());
     
     if(Status.WARN.equals(status)){
-      LOGGER.warn("{}Project reached {} warn thresholds", BuildBreakerPlugin.BUILD_BREAKER_LOG_STAMP, warnings);
+      final String warnThresholdStamp = settings.getString(BuildBreakerPlugin.WARN_THRESHOLD_LOG_STAMP_KEY);
+      LOGGER.warn("{} - [{}] - Project reached {} warn thresholds", BuildBreakerPlugin.BUILD_BREAKER_LOG_STAMP, warnThresholdStamp, warnings);
       
     }else if(Status.ERROR.equals(status)){
-      LOGGER.error("{}Project did not meet {} conditions", BuildBreakerPlugin.BUILD_BREAKER_LOG_STAMP, errors);
+      final String errorThresholdStamp = settings.getString(BuildBreakerPlugin.ERROR_THRESHOLD_LOG_STAMP_KEY);
+      LOGGER.error("{} - [{}] - Project did not meet {} conditions", BuildBreakerPlugin.BUILD_BREAKER_LOG_STAMP, errorThresholdStamp, errors);
     		
       if (!settings.getBoolean(BuildBreakerPlugin.DRY_RUN_KEY)) {
         fail("Project does not pass the quality gate.");
