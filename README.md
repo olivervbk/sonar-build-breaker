@@ -1,7 +1,5 @@
 # SonarQube Build Breaker Plugin
 
-[![Build Status](https://api.travis-ci.org/SonarQubeCommunity/sonar-build-breaker.svg)](https://travis-ci.org/SonarQubeCommunity/sonar-build-breaker) [![Nemo Quality Gate status](https://nemo.sonarqube.org/api/badges/gate?key=org.sonarqubecommunity.buildbreaker%3Asonar-build-breaker-plugin)](https://nemo.sonarqube.org/overview?id=org.sonarqubecommunity.buildbreaker%3Asonar-build-breaker-plugin)
-
 ## Compatibility
 
 | SonarQube Version | Plugin Version(s) |
@@ -14,9 +12,9 @@
 
 ## Download and Installation
 
-1. Download the appropriate `sonar-build-breaker-plugin-${version}.jar` file from the [releases page](https://github.com/SonarQubeCommunity/sonar-build-breaker/releases), based on the compatibility chart
+1. Download the latest release available on this github fork
 2. Copy the plugin into `/path/to/sonarqube/extensions/plugins/`
-3. Remove older versions of the plugin from `/path/to/sonarqube/extensions/plugins/`, if present
+3. Remove older/alternative versions of the plugin from `/path/to/sonarqube/extensions/plugins/`, if present
 4. Restart SonarQube
 
 ## Description
@@ -54,6 +52,8 @@ exit status.
   4. For very large projects or servers with a busy CE queue, more attempts or a longer interval may be necessary
 3. Run an analysis on your project
 4. If analysis fails while waiting for CE to complete, increase either `sonar.buildbreaker.queryMaxAttempts`, `sonar.buildbreaker.queryInterval`, or both
+5. Optional: You may want to choose to enable `sonar.buildbreaker.dryRun` so the BuildBreaker is executed but does not break the build. This is useful when using a third-party tool to read the logs and automate actions, for example Jenkins' Log Parse Plugin (https://wiki.jenkins-ci.org/display/JENKINS/Console+Parser+Plugin).
+
 
 ### Forbidden Configuration Build Breaker
 
@@ -71,3 +71,7 @@ Gallio skipped will be marked "broken".
 | `sonar.buildbreaker.queryMaxAttempts` | The maximum number of queries to the API when waiting for report processing.  The build will break if this is reached.  Total wait time is `sonar.buildbreaker.queryMaxAttempts * sonar.buildbreaker.queryInterval`. | `30` | |
 | `sonar.buildbreaker.queryInterval` | The interval (ms) between queries to the API when waiting for report processing.  Total wait time is `sonar.buildbreaker.queryMaxAttempts * sonar.buildbreaker.queryInterval`. | `10000` | |
 | `sonar.buildbreaker.forbiddenConf` | Comma-separated list of `key=value` pairs that should break the build. | | `sonar.gallio.mode=skip` |
+| `sonar.buildbreaker.dryRun` | If set to true, the quality gate will be checked for alert or error but the build will not be broken. Useful for checking in the log if the build has reached a threshold. | `false` | | 
+| `sonar.buildbreaker.errorThresholdLogStamp` | String to be logged when an ERROR threshold is reached. | `BUILD_BREAKER_ERROR_THRESHOLD` | | 
+| `sonar.buildbreaker.warnThresholdLogStamp` | String to be logged when a WARN threshold is reached. | `BUILD_BREAKER_WARN_THRESHOLD` | | 
+
